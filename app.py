@@ -1,8 +1,17 @@
 from flask import Flask, redirect, url_for, abort
 from flask import request, jsonify
+from  flask_sqlalchemy import  SQLAlchemy
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///todo.db'
+
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80))
+    content =db.Column(db.String(80))
 
 Feed = [
     {'id': 0,
