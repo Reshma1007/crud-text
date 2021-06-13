@@ -1,79 +1,86 @@
-from flask import Flask, redirect, url_for, abort
-from flask import request, jsonify
-from  flask_sqlalchemy import  SQLAlchemy
+from flask import Flask, request, jsonify, make_response
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///todo.db'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 class User(db.Model):
+    __tablename__ = 'pt'
+
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80))
-    content =db.Column(db.String(80))
+    name = db.Column(db.String(128))
+    title = db.Column(db.String(128))
+    content = db.Column(db.String(98))
 
-Feed = [
-    {'id': 0,
-     'title': 'welcome',
-     'content': 'hi'},
-    {'id': '1',
-     'title': 'json',
-     'content': 'good morning'
-     }
-]
+    def __init__(self, name, title, content):
+        self.name = name
+        self.title = title
+        self.content = content
 
 
-@app.route('/', methods=['GET'])
-def page():
-    return 'Create a feed'
+db.create_all()
 
 
-@app.route('/Feed/all', methods=['GET'])
-def todo():
-    return jsonify(Feed)
+@app.route('/user', methods=['POST'])
+def post():
+    name = request.json['name']
+    title = request.json['title']
+    content = request.json['content']
+
+    user = User(name, title, content)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({
+        'Message': 'User {name} {title} {content} inserted.'
+    })
 
 
-@app.route('/Feed', methods=['GET'])
-def feed_id():
-    if 'id' in request.args:
-        id = int(request.args['id'])
-    else:
-        return "error"
-    results = []
-    for feed in Feed:
-        if feed['id'] == id:
-            results.append(feed)
-    return jsonify(results)
+@app.route('/user/feed', methods=['PUT'])
+def put():
+    try:
+        id = request.args['id']
+    except Exception as _:
+        id = None
+    if not id:
+        return jsonify({'Message': 'provide the user ID'})
+    user = User.query.get(id)
+
+    name = request.json['name']
+    title = request.json['title']
+    content = request.json['content']
+
+    user.name = name
+    user.title = title
+    user.content = content
+
+    db.session.commit()
+    return jsonify({
+        'Message': 'User {name} {title} {content} altered.'
+    })
 
 
-@app.route('/Feed/all/addi', methods=['GET', 'POST'])
-def addi():
-    ack = {
-        "id": Feed[-1]['id'] + str(1),
-        "title": request.json['title'],
-        "content": request.json.get('content', " ")
-    }
-    Feed.append(ack)
-    return jsonify({'ack': ack}), 201
+@app.route('/user/feed/<int:id>', methods=['DELETE'])
+def delete():
+    try:
+        id = request.args['id']
+    except Exception as _:
+        id = None
+    if not id:
+        return jsonify({'Message': 'provide the user ID'})
+    user = User.query.get(id)
 
-@app.route('//Feed/all/addi/<int:ack_id>', methods=['PUT'])
-def update_ack(ack_id):
-    ack = [ack for ack in Feed if ack['id'] == ack_id]
-    if len(ack) == 0:
-        return "error"
-    ack[0]['title'] = request.json.get('title', ack[0]['title'])
-    ack[0]['id'] = request.json.get('id', ack[0]['id'])
-    ack[0]['content'] = request.json.get('content', ack[0]['content'])
-    return jsonify({'ack': ack[0]})
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({
+        'Message': 'User {str(id)} deleted.'
+    })
 
 
-@app.route('/Feed/all/addi/<int:ack_id>', methods=['DELETE'])
-def delete_ack(ack_id):
-    ack = [ack for ack in Feed if ack['id'] == ack_id]
-    if len(ack) == 0:
-        abort(404)
-    Feed.remove(ack[0])
-    return jsonify({'result': True})
-
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
