@@ -1,0 +1,41 @@
+from models.user import Feed
+
+
+class FeedService:
+
+    @staticmethod
+    def add_user(users):
+        name = users.get('name')
+        title = users.get('title')
+        content = users.get('content')
+
+        Feed.create_user(
+            name=name,
+            title=title,
+            content=content
+        )
+    @staticmethod
+    def get_all_users():
+        users = Feed.get_all_users()
+        results = []
+        for user in users:
+            user = dict(
+                id=user.id,
+                name=user.name,
+                title=user.title,
+                content=user.content
+            )
+            results.append(user)
+            return results
+    @staticmethod
+    def update_user(users):
+        Feed.update_users(
+            _id=users.get('id'),
+            name=users.get('name'),
+            title=users.get('title'),
+            content=users.get('content')
+        )
+
+    @staticmethod
+    def  delete_user(_id):
+        Feed.del_user(_id) 
