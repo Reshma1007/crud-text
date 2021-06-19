@@ -1,4 +1,4 @@
 CONFIG = {
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:///user.db',
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:///users.db',
     'SQLALCHEMY_TRACK_MODIFICATIONS': 'false'
 }
