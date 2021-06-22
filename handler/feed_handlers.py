@@ -9,7 +9,7 @@ FEED = Blueprint(
 
 )
 
-@FEED.route('/users', methods=['POST'])
+@FEED.route('/feed', methods=['POST'])
 def create_feed():
     params = request.get_json()
     FeedService.add_user(params)
@@ -18,13 +18,13 @@ def create_feed():
     })
 
 
-@FEED.route('/users', methods=['GET'])
+@FEED.route('/feed', methods=['GET'])
 def get_all_feed():
     users = FeedService.get_all_users()
     return json.dumps({'users': users})
 
 
-@FEED.route('/user', methods=['PUT'])
+@FEED.route('/feed', methods=['PUT'])
 def update_feed():
     params = request.get_json()
     FeedService.update_feed(params)
