@@ -12,16 +12,16 @@ FEED = Blueprint(
 @FEED.route('/feed', methods=['POST'])
 def create_feed():
     params = request.get_json()
-    FeedService.add_user(params)
+    FeedService.add_feeds(params)
     return json.dumps({
-        'Message': 'User {name} {title} {content} inserted.'
+        'Message': 'feeds {name} {title} {content} inserted.'
     })
 
 
 @FEED.route('/feed', methods=['GET'])
 def get_all_feed():
-    users = FeedService.get_all_users()
-    return json.dumps({'users': users})
+    users = FeedService.get_all_feed()
+    return json.dumps({'feed': feeds})
 
 
 @FEED.route('/feed', methods=['PUT'])
