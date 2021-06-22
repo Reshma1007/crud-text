@@ -9,17 +9,17 @@ class FeedService:
         title = users.get('title')
         content = users.get('content')
 
-        Feed.create_user(
+        Feed.create_feed(
             name=name,
             title=title,
             content=content
         )
     @staticmethod
-    def get_all_users():
-        users = Feed.get_all_users()
+    def get_all_feed():
+        users = Feed.get_all_feed()
         results = []
         for user in users:
-            user = dict(
+            _user = dict(
                 id=user.id,
                 name=user.name,
                 title=user.title,
@@ -29,7 +29,7 @@ class FeedService:
             return results
     @staticmethod
     def update_user(users):
-        Feed.update_users(
+        Feed.update_feed(
             _id=users.get('id'),
             name=users.get('name'),
             title=users.get('title'),
@@ -37,5 +37,5 @@ class FeedService:
         )
 
     @staticmethod
-    def  delete_user(_id):
-        Feed.del_user(_id) 
+    def  delete_feed(_id):
+        Feed.del_feed(_id) 
