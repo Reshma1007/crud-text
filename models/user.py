@@ -16,14 +16,14 @@ class Feed(db.Model):
         db.create_all()
 
     @staticmethod
-    def get_user(_id):
-        users = Feed.query.get(_id)
-        return users
+    def get_feeds(_id):
+        feed = Feed.query.get(_id)
+        return feed
 
     @staticmethod
-    def get_all_users():
-        users = Feed.query.all()
-        return users
+    def get_all_feed():
+        feed= Feed.query.all()
+        return feed
 
     @staticmethod
     def create_feed(
@@ -31,26 +31,26 @@ class Feed(db.Model):
             title,
             content
     ):
-        users = Feed(
+        feed= Feed(
             name=name,
             title=title,
             content=content
         )
-        db.session.add(users)
+        db.session.add(feed)
         db.session.commit()
 
     @staticmethod
-    def update_users(_id, name, title, content):
-        users = Feed.query.get(_id)
-        users.name = name
-        users.title = title
-        users.content = content
+    def update_feed(_id, name, title, content):
+        feed = Feed.query.get(_id)
+        feed.name = name
+        feed.title = title
+        feed.content = content
         db.session.add(users)
         db.session.commit()
 
 
     @staticmethod
     def del_user(_id):
-        users = Feed.query.get_or_404(_id)
-        db.session.delete(users)
+        feed= Feed.query.get_or_404(_id)
+        db.session.delete(feed)
         db.session.commit()
