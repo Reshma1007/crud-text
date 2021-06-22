@@ -16,8 +16,8 @@ class Feed(db.Model):
         db.create_all()
 
     @staticmethod
-    def get_user(user_id):
-        users = Feed.query.get(user_id)
+    def get_user(_id):
+        users = Feed.query.get(_id)
         return users
 
     @staticmethod
@@ -26,7 +26,7 @@ class Feed(db.Model):
         return users
 
     @staticmethod
-    def create_user(
+    def create_feed(
             name,
             title,
             content
