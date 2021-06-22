@@ -10,7 +10,7 @@ FEED = Blueprint(
 )
 
 @FEED.route('/users', methods=['POST'])
-def create_user():
+def create_feed():
     params = request.get_json()
     FeedService.add_user(params)
     return json.dumps({
@@ -19,19 +19,19 @@ def create_user():
 
 
 @FEED.route('/users', methods=['GET'])
-def get_all_user():
+def get_all_feed():
     users = FeedService.get_all_users()
     return json.dumps({'users': users})
 
 
 @FEED.route('/user', methods=['PUT'])
-def update_user():
+def update_feed():
     params = request.get_json()
-    FeedService.update_user(params)
-    return json.dumps(({'message': 'user updated successfully'}))
+    FeedService.update_feed(params)
+    return json.dumps(({'message': 'feed updated successfully'}))
 
 
-@FEED.route('/user/<_id>', methods=['DELETE'])
-def delete_user(_id):
-    FeedService.delete_user(_id)
-    return {"message": f"User successfully deleted."}
+@FEED.route('/feed/<_id>', methods=['DELETE'])
+def delete_feed(_id):
+    FeedService.delete_feed(_id)
+    return {"message": f"Feed successfully deleted."}
