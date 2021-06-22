@@ -23,7 +23,7 @@ class FeedService:
                 id=feeds.id,
                 name=feeds.name,
                 title=feeds.title,
-                content=user.content
+                content=feeds.content
             )
             results.append(_feeds)
             return results
